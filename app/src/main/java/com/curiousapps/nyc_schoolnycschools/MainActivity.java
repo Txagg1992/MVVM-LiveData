@@ -61,11 +61,11 @@ public class MainActivity extends BaseActivity {
         mMainListViewModel.getPicObjects().observe(this, new Observer<List<PicObject>>() {
             @Override
             public void onChanged(List<PicObject> picObjects) {
-//                if (picObjects != null){
-//                    for (PicObject picObject:picObjects){
-//                        Log.d(TAG, "onChanged: " + picObject.getId());
-//                    }
-//                }
+                if (picObjects != null){
+                    for (PicObject picObject:picObjects){
+                        Log.d(TAG, "onChanged: " + picObject.getId());
+                    }
+                }
             }
         });
     }
@@ -75,24 +75,52 @@ public class MainActivity extends BaseActivity {
 
     private void testRetrofitRequests(){
         Log.d(TAG, "Retrofit Start");
-        //searchPicObjectsApi("cherry", 1);
+        searchPicObjectsApi("cherry", 1);
 
-        PictureApi pictureApi = ServiceGenerator.getPictureApi();
-
-//        Call<PicSearchResponse> responseCall = pictureApi.searchPics(
-//                API_KEY, "australian shepherd", "1"
+//        PictureApi pictureApi = ServiceGenerator.getPictureApi();
+//
+////        Call<PicSearchResponse> responseCall = pictureApi.searchPics(
+////                API_KEY, "australian shepherd", "1"
+////        );
+////        Log.d(TAG+" make call", responseCall.toString());
+////
+////        responseCall.enqueue(new Callback<PicSearchResponse>() {
+////            @Override
+////            public void onResponse(Call<PicSearchResponse> call, Response<PicSearchResponse> response) {
+////                Log.d(TAG, "ServerResponse: " + response.code());
+////                if (response.code() == 200){
+////                    Log.d(TAG, "onResponse: " + response.body().toString());
+////                    List<PicObject> picObjects = new ArrayList<>(response.body().getPicObjects()) ;
+////                    for (PicObject picObject: picObjects )
+////                        Log.d(TAG, "Responding... "+ picObject.getUser());
+////                }else {
+////                    try {
+////                        Log.d(TAG+ "error", response.errorBody().string());
+////                    } catch (IOException ex) {
+////                        ex.printStackTrace();
+////                    }
+////                }
+////            }
+////
+////            @Override
+////            public void onFailure(Call<PicSearchResponse> call, Throwable t) {
+////                Log.d(TAG + "<FAIL>", call.toString() + t.getMessage());
+////            }
+////        });
+//        Call<PicResponse> responseCall = pictureApi.getPic(
+//                API_KEY, "4720181"
 //        );
 //        Log.d(TAG+" make call", responseCall.toString());
 //
-//        responseCall.enqueue(new Callback<PicSearchResponse>() {
+//        responseCall.enqueue(new Callback<PicResponse>() {
 //            @Override
-//            public void onResponse(Call<PicSearchResponse> call, Response<PicSearchResponse> response) {
+//            public void onResponse(Call<PicResponse> call, Response<PicResponse> response) {
 //                Log.d(TAG, "ServerResponse: " + response.code());
 //                if (response.code() == 200){
 //                    Log.d(TAG, "onResponse: " + response.body().toString());
-//                    List<PicObject> picObjects = new ArrayList<>(response.body().getPicObjects()) ;
+//                    List<PicObject> picObjects = new ArrayList<>(response.body().getPicObject()) ;
 //                    for (PicObject picObject: picObjects )
-//                        Log.d(TAG, "Responding... "+ picObject.getUser());
+//                        Log.d(TAG, "Responding... "+ picObject.getUser() + ": " + picObject.getTags());
 //                }else {
 //                    try {
 //                        Log.d(TAG+ "error", response.errorBody().string());
@@ -103,38 +131,10 @@ public class MainActivity extends BaseActivity {
 //            }
 //
 //            @Override
-//            public void onFailure(Call<PicSearchResponse> call, Throwable t) {
+//            public void onFailure(Call<PicResponse> call, Throwable t) {
 //                Log.d(TAG + "<FAIL>", call.toString() + t.getMessage());
 //            }
 //        });
-        Call<PicResponse> responseCall = pictureApi.getPic(
-                API_KEY, "4720181"
-        );
-        Log.d(TAG+" make call", responseCall.toString());
-
-        responseCall.enqueue(new Callback<PicResponse>() {
-            @Override
-            public void onResponse(Call<PicResponse> call, Response<PicResponse> response) {
-                Log.d(TAG, "ServerResponse: " + response.code());
-                if (response.code() == 200){
-                    Log.d(TAG, "onResponse: " + response.body().toString());
-                    List<PicObject> picObjects = new ArrayList<>(response.body().getPicObject()) ;
-                    for (PicObject picObject: picObjects )
-                        Log.d(TAG, "Responding... "+ picObject.getUser() + ": " + picObject.getTags());
-                }else {
-                    try {
-                        Log.d(TAG+ "error", response.errorBody().string());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PicResponse> call, Throwable t) {
-                Log.d(TAG + "<FAIL>", call.toString() + t.getMessage());
-            }
-        });
 
     }
 }

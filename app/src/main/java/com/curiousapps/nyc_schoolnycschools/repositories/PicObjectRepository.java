@@ -20,13 +20,22 @@ public class PicObjectRepository {
         return instance;
     }
 
-    private PicObjectRepository() {
+    private PicObjectRepository(){
         mPicObjectApiClient = PicObjectApiClient.getInstance();
-    }
-    public LiveData<List<PicObject>> getPicObjects(){
-        return mPicObjectApiClient.getPicObjects();
+        //mPicObjects = new MutableLiveData<>();
     }
 
+    public LiveData<List<PicObject>> getPicObjects(){
+        return mPicObjectApiClient.getPicObjects();
+        //return mPicObjects;
+    }
+//    private PicObjectRepository() {
+//        mPicObjectApiClient = PicObjectApiClient.getInstance();
+//    }
+//    public LiveData<List<PicObject>> getPicObjects(){
+//        return mPicObjectApiClient.getPicObjects();
+//    }
+//
     public void searchPicObjectsApi(String query, int pageNumber){
         if (pageNumber == 0){
             pageNumber = 1;

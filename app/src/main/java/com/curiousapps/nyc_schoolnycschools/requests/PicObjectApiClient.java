@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static com.curiousapps.nyc_schoolnycschools.util.Constants.NETWORK_TIMEOUT;
+
 public class PicObjectApiClient {
 
     private static final String TAG = "PicObjectApiClient";
@@ -35,7 +37,6 @@ public class PicObjectApiClient {
 
     private PicObjectApiClient() {
         mPicObject = new MutableLiveData<>();
-
     }
 
     public LiveData<List<PicObject>> getPicObjects() {
@@ -47,16 +48,15 @@ public class PicObjectApiClient {
             mRetrievePicObjectsRunnable = null;
         }
         mRetrievePicObjectsRunnable = new RetrievePicObjectsRunnable(query, pageNumber);
-        final Future handler = AppExecutors.get().networkIo().submit(mRetrievePicObjectsRunnable);
 
-        // Set a timeout for the data refresh
-        AppExecutors.get().networkIo().schedule(new Runnable() {
+        final Future handler = AppExecutors.getInstance().networkIo().submit(mRetrievePicObjectsRunnable);
+        AppExecutors.getInstance().networkIo().schedule(new Runnable() {
+
             @Override
             public void run() {
-                //Let user know rest call timed out
                 handler.cancel(true);
             }
-        }, Constants.NETWORK_TIMEOUT, TimeUnit.MICROSECONDS);
+        }, NETWORK_TIMEOUT, TimeUnit.MILLISECONDS);
     }
 
     private class RetrievePicObjectsRunnable implements Runnable {
