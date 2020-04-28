@@ -1,36 +1,26 @@
 package com.curiousapps.nyc_schoolnycschools;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
+import com.curiousapps.nyc_schoolnycschools.adapters.OnPicObjectListener;
+import com.curiousapps.nyc_schoolnycschools.adapters.PicObjAdapter;
 import com.curiousapps.nyc_schoolnycschools.models.PicObject;
-import com.curiousapps.nyc_schoolnycschools.requests.PictureApi;
-import com.curiousapps.nyc_schoolnycschools.requests.ServiceGenerator;
-import com.curiousapps.nyc_schoolnycschools.requests.responses.PicResponse;
-import com.curiousapps.nyc_schoolnycschools.requests.responses.PicSearchResponse;
-import com.curiousapps.nyc_schoolnycschools.util.Constants;
+import com.curiousapps.nyc_schoolnycschools.util.Testing;
 import com.curiousapps.nyc_schoolnycschools.viewModels.MainListViewModel;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.curiousapps.nyc_schoolnycschools.util.Constants.API_KEY;
-
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements OnPicObjectListener {
 
     private MainListViewModel mMainListViewModel;
+    private RecyclerView mRecyclerView;
+    private PicObjAdapter mPicObjAdapter;
 
     private static final String TAG = "MainActivity";
     @Override
@@ -38,22 +28,31 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mRecyclerView = findViewById(R.id.pic_obj_list);
         mMainListViewModel = new ViewModelProvider(this).get(MainListViewModel.class);
 
+        initRecyclerView();
         subscribeObservers();
-        findViewById(R.id.test).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Button Clicked");
-
-                testRetrofitRequests();
+        testRetrofitRequests();
+//        findViewById(R.id.test).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "Button Clicked");
+//
+//                testRetrofitRequests();
 //                if (mProgressBar.getVisibility() == View.VISIBLE){
 //                    showProgressBar(false);
 //                }else {
 //                    showProgressBar(true);
 //                }
-            }
-        });
+//            }
+//        });
+    }
+
+    private void initRecyclerView(){
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mPicObjAdapter = new PicObjAdapter(this);
+        mRecyclerView.setAdapter(mPicObjAdapter);
     }
 
     private void subscribeObservers(){
@@ -62,9 +61,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onChanged(List<PicObject> picObjects) {
                 if (picObjects != null){
-                    for (PicObject picObject:picObjects){
-                        Log.d(TAG, "onChanged: " + picObject.getId());
-                    }
+                    Testing.printPicObjects(picObjects, "ShortList...");
+                    mPicObjAdapter.setPicObjects(picObjects);
                 }
             }
         });
@@ -135,6 +133,16 @@ public class MainActivity extends BaseActivity {
 //                Log.d(TAG + "<FAIL>", call.toString() + t.getMessage());
 //            }
 //        });
+
+    }
+
+    @Override
+    public void onPicObjectClick(int position) {
+
+    }
+
+    @Override
+    public void onCategoryClick(String category) {
 
     }
 }

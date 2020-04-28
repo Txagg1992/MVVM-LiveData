@@ -49,24 +49,48 @@ public class PicObject implements Parcelable {
         return user;
     }
 
+    public void setUser(String user) {
+        this.user = user;
+    }
+
     public String getTags() {
         return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 
     public String getId() {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getWebformatURL() {
         return webformatURL;
+    }
+
+    public void setWebformatURL(String webformatURL) {
+        this.webformatURL = webformatURL;
     }
 
     public String getPageURL() {
         return pageURL;
     }
 
+    public void setPageURL(String pageURL) {
+        this.pageURL = pageURL;
+    }
+
     public int getLikes() {
         return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     @Override
