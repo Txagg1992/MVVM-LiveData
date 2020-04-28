@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
 
     private void testRetrofitRequests(){
         Log.d(TAG, "Retrofit Start");
-        searchPicObjectsApi("cherry", 1);
+        searchPicObjectsApi("australian shepherd puppy", 1);
 
 //        PictureApi pictureApi = ServiceGenerator.getPictureApi();
 //
