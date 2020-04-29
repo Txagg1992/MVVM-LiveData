@@ -10,4 +10,20 @@ public class Constants {
 
     public static final int NETWORK_TIMEOUT = 5000;
 
+    public static final String [] DEFAULT_SEARCH_CATEGORIES = {
+      "Lady", "Kitten", "Horse", "Race Car", "Australian Shepherd", "Ferrari", "Rose", "Apple", "Cherry"
+    };
+    public static final String[] DEFAULT_SEARCH_IMAGES = {
+            "lady",
+            "kitten",
+            "horse",
+            "race_car",
+            "australian_shepherd",
+            "ferrari",
+            "rose",
+            "apple",
+            "cherry"
+    };
+
+    public static final String RESOURCE_DRAWABLE = "android.resource://com.curiousapps.nyc_schoolnycschools/drawable/";
 }

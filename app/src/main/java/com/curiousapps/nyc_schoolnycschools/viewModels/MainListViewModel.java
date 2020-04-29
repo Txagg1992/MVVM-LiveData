@@ -11,7 +11,10 @@ import java.util.List;
 
 public class MainListViewModel extends ViewModel {
     private PicObjectRepository mPicObjectRepository;
+    private boolean mIsViewingPictures;
+
     public MainListViewModel() {
+        mIsViewingPictures = false;
         mPicObjectRepository = PicObjectRepository.getInstance();
     }
 
@@ -20,6 +23,15 @@ public class MainListViewModel extends ViewModel {
     }
 
     public void searchPicObjectsApi(String query, int pageNumber){
+        mIsViewingPictures = true;
         mPicObjectRepository.searchPicObjectsApi(query, pageNumber);
+    }
+
+    public boolean isViewingPictures(){
+        return mIsViewingPictures;
+    }
+
+    public void setIsViewingPictures(boolean isViewingPictures){
+        mIsViewingPictures = isViewingPictures;
     }
 }

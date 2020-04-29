@@ -29,13 +29,17 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        showSearchTextView(true);
+        //showSearchTextView(true);
         mRecyclerView = findViewById(R.id.pic_obj_list);
         mMainListViewModel = new ViewModelProvider(this).get(MainListViewModel.class);
 
         initRecyclerView();
         subscribeObservers();
         initSearchView();
+        if (!mMainListViewModel.isViewingPictures()){
+            //Display search Categories
+            displaySearchCategories();
+        }
         //testRetrofitRequests();
 //        findViewById(R.id.test).setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -80,7 +84,7 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
             public boolean onQueryTextSubmit(String query) {
                 mPicObjAdapter.displayLoading();
                 mMainListViewModel.searchPicObjectsApi(query, 1);
-                showSearchTextView(false);
+                //showSearchTextView(false);
 
                 return false;
 
@@ -165,6 +169,12 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
 
     @Override
     public void onCategoryClick(String category) {
+        mPicObjAdapter.displayLoading();
+        mMainListViewModel.searchPicObjectsApi(category, 1);
+    }
 
+    private void displaySearchCategories(){
+        mMainListViewModel.setIsViewingPictures(false);
+        mPicObjAdapter.displaySearchCategories();
     }
 }
