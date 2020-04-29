@@ -14,8 +14,16 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:queryHint="Search Pictures">
+
+            </androidx.appcompat.widget.SearchView>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -24,9 +32,10 @@
         android:id="@+id/pic_obj_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:backgroundTint="#FFFFFF"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         tools:layout_editor_absoluteX="-26dp"
         tools:layout_editor_absoluteY="-154dp"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         tools:listitem="@layout/pic_obj_list_item" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

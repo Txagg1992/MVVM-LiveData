@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.SearchView;
 
 import com.curiousapps.nyc_schoolnycschools.adapters.OnPicObjectListener;
 import com.curiousapps.nyc_schoolnycschools.adapters.PicObjAdapter;
@@ -28,12 +29,14 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        showSearchTextView(true);
         mRecyclerView = findViewById(R.id.pic_obj_list);
         mMainListViewModel = new ViewModelProvider(this).get(MainListViewModel.class);
 
         initRecyclerView();
         subscribeObservers();
-        testRetrofitRequests();
+        initSearchView();
+        //testRetrofitRequests();
 //        findViewById(R.id.test).setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -68,7 +71,26 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
         });
     }
     private void searchPicObjectsApi(String query, int pageNumber){
-        mMainListViewModel.searchPicObjectsApi(query, pageNumber);
+    }
+
+    private void initSearchView(){
+        final androidx.appcompat.widget.SearchView searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mPicObjAdapter.displayLoading();
+                mMainListViewModel.searchPicObjectsApi(query, 1);
+                showSearchTextView(false);
+
+                return false;
+
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     private void testRetrofitRequests(){
