@@ -68,6 +68,17 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mPicObjAdapter = new PicObjAdapter(this);
         mRecyclerView.setAdapter(mPicObjAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                if (mRecyclerView.canScrollVertically(1)){
+//                    //search for pic objects in next page
+//                    mMainListViewModel.searchNextPage();
+//                }
+                mMainListViewModel.searchNextPage();
+            }
+        });
     }
 
     private void subscribeObservers(){

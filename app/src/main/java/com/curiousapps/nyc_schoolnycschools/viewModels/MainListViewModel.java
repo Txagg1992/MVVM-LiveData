@@ -29,6 +29,12 @@ public class MainListViewModel extends ViewModel {
         mPicObjectRepository.searchPicObjectsApi(query, pageNumber);
     }
 
+    public void searchNextPage(){
+        if (!mIsPerformingQuery && mIsViewingPictures){
+            mPicObjectRepository.searchNextPage();
+        }
+    }
+
     public boolean isViewingPictures(){
         return mIsViewingPictures;
     }

@@ -36,23 +36,23 @@ public class PicObjAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = null;
-        switch (viewType){
-            case PIC_OBJECT_TYPE:{
+        switch (viewType) {
+            case PIC_OBJECT_TYPE: {
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.pic_obj_list_item, parent, false);
                 return new PicObjViewHolder(view, mOnPicObjectListener);
             }
-            case LOADING_TYPE:{
+            case LOADING_TYPE: {
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.layout_loading_dots, parent, false);
                 return new LoadingViewHolder(view);
             }
-            case CATEGORY_TYPE:{
+            case CATEGORY_TYPE: {
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.layout_category_list_item, parent, false);
                 return new CategoryViewHolder(view, mOnPicObjectListener);
             }
-            default:{
+            default: {
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.pic_obj_list_item, parent, false);
                 return new PicObjViewHolder(view, mOnPicObjectListener);
@@ -64,19 +64,18 @@ public class PicObjAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         int itemViewType = getItemViewType(position);
-        if (itemViewType == PIC_OBJECT_TYPE){
+        if (itemViewType == PIC_OBJECT_TYPE) {
             RequestOptions requestOptions = new RequestOptions()
                     .placeholder(R.drawable.ic_launcher_background);
             Glide.with(holder.itemView.getContext())
                     .setDefaultRequestOptions(requestOptions)
                     .load(mPicObjects.get(position).getWebformatURL())
-                    .into(((PicObjViewHolder)holder).image);
+                    .into(((PicObjViewHolder) holder).image);
 
-            ((PicObjViewHolder)holder).user.setText("Photographer: " + mPicObjects.get(position).getUser());
-            ((PicObjViewHolder)holder).tags.setText("Tags: " + mPicObjects.get(position).getTags());
-            ((PicObjViewHolder)holder).likes.setText("Likes: " +  String.valueOf(mPicObjects.get(position).getLikes()));
-        }
-        else if (itemViewType == CATEGORY_TYPE) {
+            ((PicObjViewHolder) holder).user.setText("Photographer: " + mPicObjects.get(position).getUser());
+            ((PicObjViewHolder) holder).tags.setText("Tags: " + mPicObjects.get(position).getTags());
+            ((PicObjViewHolder) holder).likes.setText("Likes: " + String.valueOf(mPicObjects.get(position).getLikes()));
+        } else if (itemViewType == CATEGORY_TYPE) {
             RequestOptions requestOptions = new RequestOptions()
                     .centerCrop()
                     .placeholder(R.drawable.ic_launcher_background);
@@ -93,17 +92,21 @@ public class PicObjAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        if (mPicObjects.get(position).getLikes() == -1){
+        if (mPicObjects.get(position).getLikes() == -1) {
             return CATEGORY_TYPE;
-        }else if (mPicObjects.get(position).getUser().equals("Loading...")){
+        } else if (mPicObjects.get(position).getUser().equals("Loading...")) {
             return LOADING_TYPE;
-        }else {
+        } else if (position == mPicObjects.size() - 1
+                && position != 0
+                && !mPicObjects.get(position).getUser().equals("EXHAUSTED...")) {
+            return LOADING_TYPE;
+        } else {
             return PIC_OBJECT_TYPE;
         }
     }
 
-    public void displayLoading(){
-        if (!isLoading()){
+    public void displayLoading() {
+        if (!isLoading()) {
             PicObject picObject = new PicObject();
             picObject.setUser("Loading...");
             List<PicObject> loadingList = new ArrayList<>();
@@ -113,10 +116,10 @@ public class PicObjAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private boolean isLoading(){
-        if (mPicObjects != null){
-            if (mPicObjects.size() > 0){
-                if (mPicObjects.get(mPicObjects.size() - 1).getUser().equals("Loading...")){
+    private boolean isLoading() {
+        if (mPicObjects != null) {
+            if (mPicObjects.size() > 0) {
+                if (mPicObjects.get(mPicObjects.size() - 1).getUser().equals("Loading...")) {
                     return true;
                 }
             }
@@ -124,9 +127,9 @@ public class PicObjAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return false;
     }
 
-    public void displaySearchCategories(){
+    public void displaySearchCategories() {
         List<PicObject> categories = new ArrayList<>();
-        for (int i = 0; i < Constants.DEFAULT_SEARCH_CATEGORIES.length; i++){
+        for (int i = 0; i < Constants.DEFAULT_SEARCH_CATEGORIES.length; i++) {
             PicObject picObject = new PicObject();
             picObject.setUser(Constants.DEFAULT_SEARCH_CATEGORIES[i]);
             picObject.setWebformatURL(Constants.DEFAULT_SEARCH_IMAGES[i]);
@@ -139,13 +142,13 @@ public class PicObjAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        if (mPicObjects != null){
+        if (mPicObjects != null) {
             return mPicObjects.size();
         }
         return 0;
     }
 
-    public void setPicObjects(List<PicObject> picObjects){
+    public void setPicObjects(List<PicObject> picObjects) {
         mPicObjects = picObjects;
         notifyDataSetChanged();
     }

@@ -13,6 +13,9 @@ public class PicObjectRepository {
 
     private static PicObjectRepository instance;
     private PicObjectApiClient mPicObjectApiClient;
+    private String mQuery;
+    private int mPageNumber;
+
     public static PicObjectRepository getInstance(){
         if (instance == null){
             instance = new PicObjectRepository();
@@ -31,7 +34,13 @@ public class PicObjectRepository {
         if (pageNumber == 0){
             pageNumber = 1;
         }
+        mQuery = query;
+        mPageNumber = pageNumber;
         mPicObjectApiClient.searchPicObjectsApi(query, pageNumber);
+    }
+
+    public void searchNextPage(){
+        searchPicObjectsApi(mQuery, mPageNumber +1);//mPagenumber +1
     }
 
     public void cancelRequest(){
