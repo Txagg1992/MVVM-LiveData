@@ -114,4 +114,10 @@ public class PicObjectApiClient {
             cancelRequest = true;
         }
     }
+
+    public void cancelRequest(){
+        if (mRetrievePicObjectsRunnable != null){
+            mRetrievePicObjectsRunnable.cancelRequest();
+        }
+    }
 }

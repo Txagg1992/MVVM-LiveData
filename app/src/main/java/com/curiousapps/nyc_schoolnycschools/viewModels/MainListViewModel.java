@@ -12,10 +12,11 @@ import java.util.List;
 public class MainListViewModel extends ViewModel {
     private PicObjectRepository mPicObjectRepository;
     private boolean mIsViewingPictures;
+    private boolean mIsPerformingQuery;
 
     public MainListViewModel() {
-        mIsViewingPictures = false;
         mPicObjectRepository = PicObjectRepository.getInstance();
+        mIsPerformingQuery = false;
     }
 
     public LiveData<List<PicObject>> getPicObjects(){
@@ -24,6 +25,7 @@ public class MainListViewModel extends ViewModel {
 
     public void searchPicObjectsApi(String query, int pageNumber){
         mIsViewingPictures = true;
+        mIsPerformingQuery = true;
         mPicObjectRepository.searchPicObjectsApi(query, pageNumber);
     }
 
@@ -33,5 +35,26 @@ public class MainListViewModel extends ViewModel {
 
     public void setIsViewingPictures(boolean isViewingPictures){
         mIsViewingPictures = isViewingPictures;
+    }
+
+    public boolean isPerformingQuery(){
+        return mIsPerformingQuery;
+    }
+
+    public void setPerformingQuery(boolean isPerformingQuery){
+        mIsPerformingQuery = isPerformingQuery;
+    }
+
+    public boolean onBackPressed(){
+        if (mIsPerformingQuery){
+           //cancel the query
+           mPicObjectRepository.cancelRequest();
+           mIsPerformingQuery = false;
+        }
+        if (mIsViewingPictures){
+            mIsViewingPictures = false;
+            return false;
+        }
+        return true;
     }
 }

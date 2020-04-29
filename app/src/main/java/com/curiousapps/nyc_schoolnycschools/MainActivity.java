@@ -1,5 +1,7 @@
 package com.curiousapps.nyc_schoolnycschools;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.SearchView;
 
 import com.curiousapps.nyc_schoolnycschools.adapters.OnPicObjectListener;
@@ -14,6 +18,7 @@ import com.curiousapps.nyc_schoolnycschools.adapters.PicObjAdapter;
 import com.curiousapps.nyc_schoolnycschools.models.PicObject;
 import com.curiousapps.nyc_schoolnycschools.util.Testing;
 import com.curiousapps.nyc_schoolnycschools.viewModels.MainListViewModel;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.List;
 
@@ -22,6 +27,7 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
     private MainListViewModel mMainListViewModel;
     private RecyclerView mRecyclerView;
     private PicObjAdapter mPicObjAdapter;
+    private androidx.appcompat.widget.SearchView mSearchView;
 
     private static final String TAG = "MainActivity";
     @Override
@@ -31,6 +37,7 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
 
         //showSearchTextView(true);
         mRecyclerView = findViewById(R.id.pic_obj_list);
+        mSearchView = findViewById(R.id.search_view);
         mMainListViewModel = new ViewModelProvider(this).get(MainListViewModel.class);
 
         initRecyclerView();
@@ -40,6 +47,7 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
             //Display search Categories
             displaySearchCategories();
         }
+        setSupportActionBar(findViewById(R.id.toolbar));
         //testRetrofitRequests();
 //        findViewById(R.id.test).setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -68,8 +76,11 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
             @Override
             public void onChanged(List<PicObject> picObjects) {
                 if (picObjects != null){
-                    Testing.printPicObjects(picObjects, "ShortList...");
-                    mPicObjAdapter.setPicObjects(picObjects);
+                    if (mMainListViewModel.isViewingPictures()){
+                        Testing.printPicObjects(picObjects, "ShortList...");
+                        mMainListViewModel.setPerformingQuery(false);
+                        mPicObjAdapter.setPicObjects(picObjects);
+                    }
                 }
             }
         });
@@ -78,12 +89,13 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
     }
 
     private void initSearchView(){
-        final androidx.appcompat.widget.SearchView searchView = findViewById(R.id.search_view);
-        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+
+        mSearchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 mPicObjAdapter.displayLoading();
                 mMainListViewModel.searchPicObjectsApi(query, 1);
+                mSearchView.clearFocus();
                 //showSearchTextView(false);
 
                 return false;
@@ -171,10 +183,34 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
     public void onCategoryClick(String category) {
         mPicObjAdapter.displayLoading();
         mMainListViewModel.searchPicObjectsApi(category, 1);
+        mSearchView.clearFocus();
     }
 
     private void displaySearchCategories(){
         mMainListViewModel.setIsViewingPictures(false);
         mPicObjAdapter.displaySearchCategories();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (mMainListViewModel.onBackPressed()){
+            super.onBackPressed();
+        }else displaySearchCategories();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.pic_object_search_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_categories){
+            displaySearchCategories();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

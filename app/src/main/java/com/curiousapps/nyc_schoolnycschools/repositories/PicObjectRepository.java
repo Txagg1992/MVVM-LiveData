@@ -33,4 +33,8 @@ public class PicObjectRepository {
         }
         mPicObjectApiClient.searchPicObjectsApi(query, pageNumber);
     }
+
+    public void cancelRequest(){
+        mPicObjectApiClient.cancelRequest();
+    }
 }
