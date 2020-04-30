@@ -23,10 +23,10 @@ public class MainListViewModel extends ViewModel {
         return mPicObjectRepository.getPicObjects();
     }
 
-    public void searchPicObjectsApi(String query, int pageNumber){
+    public void searchPicObjectsApi(String query, String perPage, int pageNumber){
         mIsViewingPictures = true;
         mIsPerformingQuery = true;
-        mPicObjectRepository.searchPicObjectsApi(query, pageNumber);
+        mPicObjectRepository.searchPicObjectsApi(query, perPage, pageNumber);
     }
 
     public void searchNextPage(){

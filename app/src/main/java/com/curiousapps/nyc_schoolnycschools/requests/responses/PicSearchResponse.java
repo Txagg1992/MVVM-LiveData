@@ -8,11 +8,11 @@ import java.util.List;
 
 public class PicSearchResponse {
 
-    @SerializedName("totalHits")
+    @SerializedName("totalHits")//count
     @Expose
     private int totalHits;
 
-    @SerializedName("hits")
+    @SerializedName("hits")// the array of objects
     @Expose
     private List<PicObject> picObjects;
 

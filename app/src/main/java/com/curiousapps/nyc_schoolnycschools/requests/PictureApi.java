@@ -14,6 +14,7 @@ public interface PictureApi {
     Call<PicSearchResponse> searchPics(
             @Query("key") String key,
             @Query("q") String query,
+            @Query("per_page") String per_page,
             @Query("page") String page
     );
 

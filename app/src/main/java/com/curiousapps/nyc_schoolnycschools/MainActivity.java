@@ -16,11 +16,24 @@ import android.widget.SearchView;
 import com.curiousapps.nyc_schoolnycschools.adapters.OnPicObjectListener;
 import com.curiousapps.nyc_schoolnycschools.adapters.PicObjAdapter;
 import com.curiousapps.nyc_schoolnycschools.models.PicObject;
+import com.curiousapps.nyc_schoolnycschools.requests.PictureApi;
+import com.curiousapps.nyc_schoolnycschools.requests.ServiceGenerator;
+import com.curiousapps.nyc_schoolnycschools.requests.responses.PicSearchResponse;
+import com.curiousapps.nyc_schoolnycschools.util.Constants;
 import com.curiousapps.nyc_schoolnycschools.util.Testing;
 import com.curiousapps.nyc_schoolnycschools.viewModels.MainListViewModel;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.curiousapps.nyc_schoolnycschools.util.Constants.*;
+import static com.curiousapps.nyc_schoolnycschools.util.Constants.API_KEY;
 
 public class MainActivity extends BaseActivity implements OnPicObjectListener {
 
@@ -72,10 +85,10 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-//                if (mRecyclerView.canScrollVertically(1)){
-//                    //search for pic objects in next page
-//                    mMainListViewModel.searchNextPage();
-//                }
+                if (mRecyclerView.canScrollVertically(1)){
+                    //search for pic objects in next page
+                    //mMainListViewModel.searchNextPage();
+                }
                 mMainListViewModel.searchNextPage();
             }
         });
@@ -96,7 +109,8 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
             }
         });
     }
-    private void searchPicObjectsApi(String query, int pageNumber){
+    private void searchPicObjectsApi(String query, String perPage, int pageNumber){
+        mMainListViewModel.searchPicObjectsApi(query, perPage, pageNumber);
     }
 
     private void initSearchView(){
@@ -105,7 +119,7 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 mPicObjAdapter.displayLoading();
-                mMainListViewModel.searchPicObjectsApi(query, 1);
+                mMainListViewModel.searchPicObjectsApi(query, NUMBER_PER_PAGE, 1);
                 mSearchView.clearFocus();
                 //showSearchTextView(false);
 
@@ -121,39 +135,39 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
     }
 
     private void testRetrofitRequests(){
-        Log.d(TAG, "Retrofit Start");
-        searchPicObjectsApi("australian shepherd puppy", 1);
-
+//        Log.d(TAG, "Retrofit Start");
+//        searchPicObjectsApi("australian shepherd puppy", 1);
+//
 //        PictureApi pictureApi = ServiceGenerator.getPictureApi();
 //
-////        Call<PicSearchResponse> responseCall = pictureApi.searchPics(
-////                API_KEY, "australian shepherd", "1"
-////        );
-////        Log.d(TAG+" make call", responseCall.toString());
-////
-////        responseCall.enqueue(new Callback<PicSearchResponse>() {
-////            @Override
-////            public void onResponse(Call<PicSearchResponse> call, Response<PicSearchResponse> response) {
-////                Log.d(TAG, "ServerResponse: " + response.code());
-////                if (response.code() == 200){
-////                    Log.d(TAG, "onResponse: " + response.body().toString());
-////                    List<PicObject> picObjects = new ArrayList<>(response.body().getPicObjects()) ;
-////                    for (PicObject picObject: picObjects )
-////                        Log.d(TAG, "Responding... "+ picObject.getUser());
-////                }else {
-////                    try {
-////                        Log.d(TAG+ "error", response.errorBody().string());
-////                    } catch (IOException ex) {
-////                        ex.printStackTrace();
-////                    }
-////                }
-////            }
-////
-////            @Override
-////            public void onFailure(Call<PicSearchResponse> call, Throwable t) {
-////                Log.d(TAG + "<FAIL>", call.toString() + t.getMessage());
-////            }
-////        });
+//        Call<PicSearchResponse> responseCall = pictureApi.searchPics(
+//                API_KEY, "australian shepherd", NUMBER_PER_PAGE, "1"
+//        );
+//        Log.d(TAG+" make call", responseCall.toString());
+//
+//        responseCall.enqueue(new Callback<PicSearchResponse>() {
+//            @Override
+//            public void onResponse(Call<PicSearchResponse> call, Response<PicSearchResponse> response) {
+//                Log.d(TAG, "ServerResponse: " + response.code());
+//                if (response.code() == 200){
+//                    Log.d(TAG, "onResponse: " + response.body().toString());
+//                    List<PicObject> picObjects = new ArrayList<>(response.body().getPicObjects()) ;
+//                    for (PicObject picObject: picObjects )
+//                        Log.d(TAG, "Responding... "+ picObject.getUser());
+//                }else {
+//                    try {
+//                        Log.d(TAG+ "error", response.errorBody().string());
+//                    } catch (IOException ex) {
+//                        ex.printStackTrace();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<PicSearchResponse> call, Throwable t) {
+//                Log.d(TAG + "<FAIL>", call.toString() + t.getMessage());
+//            }
+//        });
 //        Call<PicResponse> responseCall = pictureApi.getPic(
 //                API_KEY, "4720181"
 //        );
@@ -193,7 +207,7 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
     @Override
     public void onCategoryClick(String category) {
         mPicObjAdapter.displayLoading();
-        mMainListViewModel.searchPicObjectsApi(category, 1);
+        mMainListViewModel.searchPicObjectsApi(category, NUMBER_PER_PAGE, 1);
         mSearchView.clearFocus();
     }
 

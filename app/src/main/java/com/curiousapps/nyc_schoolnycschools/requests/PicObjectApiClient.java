@@ -43,17 +43,18 @@ public class PicObjectApiClient {
         return mPicObject;
     }
 
-    public void searchPicObjectsApi(String query, int pageNumber) {
+    public void searchPicObjectsApi(String query, String  perPage, int pageNumber) {
         if (mRetrievePicObjectsRunnable != null){
             mRetrievePicObjectsRunnable = null;
         }
-        mRetrievePicObjectsRunnable = new RetrievePicObjectsRunnable(query, pageNumber);
+        mRetrievePicObjectsRunnable = new RetrievePicObjectsRunnable(query, perPage, pageNumber);
 
         final Future handler = AppExecutors.getInstance().networkIo().submit(mRetrievePicObjectsRunnable);
         AppExecutors.getInstance().networkIo().schedule(new Runnable() {
 
             @Override
             public void run() {
+                //Let user know that network timed out
                 handler.cancel(true);
             }
         }, NETWORK_TIMEOUT, TimeUnit.MILLISECONDS);
@@ -62,11 +63,13 @@ public class PicObjectApiClient {
     private class RetrievePicObjectsRunnable implements Runnable {
 
         private String query;
+        private String perPage;
         private int pageNumber;
         boolean cancelRequest;
 
-        public RetrievePicObjectsRunnable(String query, int pageNumber) {
+        public RetrievePicObjectsRunnable(String query, String perPage, int pageNumber) {
             this.query = query;
+            this.perPage = perPage;
             this.pageNumber = pageNumber;
             cancelRequest = false;
         }
@@ -74,7 +77,7 @@ public class PicObjectApiClient {
         @Override
         public void run() {
             try {
-                Response response = getPicObjects(query, pageNumber).execute();
+                Response response = getPicObjects(query, perPage, pageNumber).execute();
                 Log.d(TAG, "Response in Client: " + response.code());
                 if (cancelRequest) {
                     return;
@@ -100,11 +103,12 @@ public class PicObjectApiClient {
 
         }
 
-        private Call<PicSearchResponse> getPicObjects(String query, int pageNumber) {
-            Log.d("Client is calling...", query.toString() + ": " + pageNumber);
+        private Call<PicSearchResponse> getPicObjects(String query, String perPage, int pageNumber) {
+            Log.d("Client is calling...", query.toString() + ": Page number " + pageNumber);
             return ServiceGenerator.getPictureApi().searchPics(
                     Constants.API_KEY,
                     query,
+                    perPage,
                     String.valueOf(pageNumber)
             );
         }

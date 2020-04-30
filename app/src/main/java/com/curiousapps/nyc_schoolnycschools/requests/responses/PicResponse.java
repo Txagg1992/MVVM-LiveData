@@ -20,6 +20,10 @@ public class PicResponse {
         return picObject;
     }
 
+    public int getTotalHits() {
+        return totalHits;
+    }
+
     @Override
     public String toString() {
         return "PicResponse{" +
