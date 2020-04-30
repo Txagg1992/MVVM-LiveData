@@ -18,4 +18,12 @@ public class Testing {
 
         }
     }
+    public static void printDetailObject(List<PicObject> list, String tag){
+        for (PicObject picObject:list){
+            Log.d(tag, "DetailOnChanged---------------------");
+
+            Log.d(tag, "DetailChange: " + picObject.getId());
+            Log.d(tag, "DetailChange: " + picObject.getUser());
+        }
+    }
 }

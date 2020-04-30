@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.curiousapps.nyc_schoolnycschools.AppExecutors;
 import com.curiousapps.nyc_schoolnycschools.models.PicObject;
+import com.curiousapps.nyc_schoolnycschools.requests.responses.PicResponse;
 import com.curiousapps.nyc_schoolnycschools.requests.responses.PicSearchResponse;
 import com.curiousapps.nyc_schoolnycschools.util.Constants;
 
@@ -27,6 +28,9 @@ public class PicObjectApiClient {
     private MutableLiveData<List<PicObject>> mPicObject;
     private static PicObjectApiClient instance;
     private RetrievePicObjectsRunnable mRetrievePicObjectsRunnable;
+    private MutableLiveData<List<PicObject>> mPicDetail;
+    private RetrievePicDetailRunnable mRetrievePicDetailRunnable;
+
 
     public static PicObjectApiClient getInstance() {
         if (instance == null) {
@@ -37,19 +41,39 @@ public class PicObjectApiClient {
 
     private PicObjectApiClient() {
         mPicObject = new MutableLiveData<>();
+        mPicDetail = new MutableLiveData<>();
     }
 
     public LiveData<List<PicObject>> getPicObjects() {
         return mPicObject;
     }
+    public LiveData<List<PicObject>> getPicDetail() {
+        return mPicDetail;
+    }
 
-    public void searchPicObjectsApi(String query, String  perPage, int pageNumber) {
-        if (mRetrievePicObjectsRunnable != null){
+    public void searchPicObjectsApi(String query, String perPage, int pageNumber) {
+        if (mRetrievePicObjectsRunnable != null) {
             mRetrievePicObjectsRunnable = null;
         }
         mRetrievePicObjectsRunnable = new RetrievePicObjectsRunnable(query, perPage, pageNumber);
 
         final Future handler = AppExecutors.getInstance().networkIo().submit(mRetrievePicObjectsRunnable);
+        AppExecutors.getInstance().networkIo().schedule(new Runnable() {
+
+            @Override
+            public void run() {
+                //Let user know that network timed out
+                handler.cancel(true);
+            }
+        }, NETWORK_TIMEOUT, TimeUnit.MILLISECONDS);
+    }
+    public void searchPicDetailApi(String detailId) {
+        if (mRetrievePicDetailRunnable != null) {
+            mRetrievePicDetailRunnable = null;
+        }
+        mRetrievePicDetailRunnable = new RetrievePicDetailRunnable(detailId);
+
+        final Future handler = AppExecutors.getInstance().networkIo().submit(mRetrievePicDetailRunnable);
         AppExecutors.getInstance().networkIo().schedule(new Runnable() {
 
             @Override
@@ -82,16 +106,16 @@ public class PicObjectApiClient {
                 if (cancelRequest) {
                     return;
                 }
-                if (response.code() == 200){
-                    List<PicObject> list = new ArrayList<>(((PicSearchResponse)response.body()).getPicObjects());
-                    if (pageNumber == 1){
+                if (response.code() == 200) {
+                    List<PicObject> list = new ArrayList<>(((PicSearchResponse) response.body()).getPicObjects());
+                    if (pageNumber == 1) {
                         mPicObject.postValue(list);
-                    }else {
+                    } else {
                         List<PicObject> currentPicObject = mPicObject.getValue();
                         currentPicObject.addAll(list);
                         mPicObject.postValue(currentPicObject);
                     }
-                }else {
+                } else {
                     String error = response.errorBody().string();
                     Log.e(TAG, "run: error in Client: " + error);
                     mPicObject.postValue(null);
@@ -119,9 +143,61 @@ public class PicObjectApiClient {
         }
     }
 
-    public void cancelRequest(){
-        if (mRetrievePicObjectsRunnable != null){
+    private class RetrievePicDetailRunnable implements Runnable {
+
+        private String detailId;
+        boolean cancelRequest;
+
+        public RetrievePicDetailRunnable(String detailId) {
+            this.detailId = detailId;
+            cancelRequest = false;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Response response = getPicDetail(detailId).execute();
+                Log.d(TAG, "DetailResponse in Client: " + response.code());
+                if (cancelRequest) {
+                    return;
+                }
+                if (response.code() == 200) {
+                    List<PicObject> list = new ArrayList<>(((PicResponse) response.body()).getPicObject());
+                    List<PicObject> currentPicObject = mPicDetail.getValue();
+                    currentPicObject.addAll(list);
+                    mPicDetail.postValue(currentPicObject);
+                } else {
+                    String error = response.errorBody().string();
+                    Log.e(TAG, "run: error in DetailClient: " + error);
+                    mPicDetail.postValue(null);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                mPicDetail.postValue(null);
+            }
+
+        }
+
+        private Call<PicResponse> getPicDetail(String detailId) {
+            Log.d("DetailClient call...", detailId.toString());
+            return ServiceGenerator.getPictureApi().getPic(
+                    Constants.API_KEY,
+                    detailId
+            );
+        }
+
+        private void cancelRequest() {
+            Log.d(TAG, "cancelRequest: cancelling the search request.");
+            cancelRequest = true;
+        }
+    }
+
+    public void cancelRequest() {
+        if (mRetrievePicObjectsRunnable != null) {
             mRetrievePicObjectsRunnable.cancelRequest();
+        }
+        if (mRetrievePicDetailRunnable != null) {
+            mRetrievePicDetailRunnable.cancelRequest();
         }
     }
 }

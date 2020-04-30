@@ -31,6 +31,9 @@ public class PicObjectRepository {
     public LiveData<List<PicObject>> getPicObjects(){
         return mPicObjectApiClient.getPicObjects();
     }
+    public LiveData<List<PicObject>> getPicDetail(){
+        return mPicObjectApiClient.getPicDetail();
+    }
     public void searchPicObjectsApi(String query, String perPage, int pageNumber){
         if (pageNumber == 0){
             pageNumber = 1;
@@ -39,6 +42,10 @@ public class PicObjectRepository {
         mPerPage = perPage;
         mPageNumber = pageNumber;
         mPicObjectApiClient.searchPicObjectsApi(query, perPage, pageNumber);
+    }
+
+    public void searchPicDetailApi(String detailId){
+        mPicObjectApiClient.searchPicDetailApi(detailId);
     }
 
     public void searchNextPage(){
