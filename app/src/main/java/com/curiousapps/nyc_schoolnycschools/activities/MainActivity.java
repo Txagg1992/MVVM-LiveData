@@ -1,39 +1,26 @@
-package com.curiousapps.nyc_schoolnycschools;
+package com.curiousapps.nyc_schoolnycschools.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.SearchView;
 
+import com.curiousapps.nyc_schoolnycschools.R;
 import com.curiousapps.nyc_schoolnycschools.adapters.OnPicObjectListener;
 import com.curiousapps.nyc_schoolnycschools.adapters.PicObjAdapter;
 import com.curiousapps.nyc_schoolnycschools.models.PicObject;
-import com.curiousapps.nyc_schoolnycschools.requests.PictureApi;
-import com.curiousapps.nyc_schoolnycschools.requests.ServiceGenerator;
-import com.curiousapps.nyc_schoolnycschools.requests.responses.PicSearchResponse;
-import com.curiousapps.nyc_schoolnycschools.util.Constants;
 import com.curiousapps.nyc_schoolnycschools.util.Testing;
 import com.curiousapps.nyc_schoolnycschools.viewModels.MainListViewModel;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import static com.curiousapps.nyc_schoolnycschools.util.Constants.*;
-import static com.curiousapps.nyc_schoolnycschools.util.Constants.API_KEY;
 
 public class MainActivity extends BaseActivity implements OnPicObjectListener {
 
@@ -200,7 +187,9 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
 
     @Override
     public void onPicObjectClick(int position) {
-
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("picObject", mPicObjAdapter.getSelectedPicObject(position));
+        startActivity(intent);
     }
 
     @Override

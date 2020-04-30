@@ -1,4 +1,4 @@
-package com.curiousapps.nyc_schoolnycschools;
+package com.curiousapps.nyc_schoolnycschools.activities;
 
 import android.view.View;
 import android.widget.FrameLayout;
@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.curiousapps.nyc_schoolnycschools.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
 

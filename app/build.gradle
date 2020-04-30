@@ -62,6 +62,6 @@ dependencies {
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
 
     //Circle image
-    def hdodenhof_version ="3.1.0"
+    def hdodenhof_version = "3.1.0"
     implementation "de.hdodenhof:circleimageview:$hdodenhof_version"
 }

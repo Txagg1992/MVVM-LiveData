@@ -152,4 +152,13 @@ public class PicObjAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         mPicObjects = picObjects;
         notifyDataSetChanged();
     }
+
+    public PicObject getSelectedPicObject(int position){
+        if (mPicObjects != null){
+            if (mPicObjects.size() > 0){
+                return mPicObjects.get(position);
+            }
+        }
+        return null;
+    }
 }
