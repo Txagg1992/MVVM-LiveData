@@ -85,11 +85,10 @@ public class MainActivity extends BaseActivity implements OnPicObjectListener {
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (mRecyclerView.canScrollVertically(1)){
+                if (!mRecyclerView.canScrollVertically(1)){
                     //search for pic objects in next page
-                    //mMainListViewModel.searchNextPage();
+                    mMainListViewModel.searchNextPage();
                 }
-                mMainListViewModel.searchNextPage();
             }
         });
     }
