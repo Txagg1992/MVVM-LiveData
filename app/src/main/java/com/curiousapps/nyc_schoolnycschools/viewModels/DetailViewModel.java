@@ -11,6 +11,7 @@ import java.util.List;
 public class DetailViewModel extends ViewModel {
 
     private PicObjectRepository mDetailRepository;
+    private String mDetailId;
 
     public DetailViewModel() {
         mDetailRepository = PicObjectRepository.getInstance();
@@ -21,6 +22,11 @@ public class DetailViewModel extends ViewModel {
     }
 
     public void searchPicDetailApi(String detailId){
+        mDetailId = detailId;
         mDetailRepository.searchPicDetailApi(detailId);
+    }
+
+    public String getDetailId() {
+        return mDetailId;
     }
 }

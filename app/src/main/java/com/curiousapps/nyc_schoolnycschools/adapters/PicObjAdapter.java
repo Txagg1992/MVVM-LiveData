@@ -24,6 +24,7 @@ public class PicObjAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int PIC_OBJECT_TYPE = 1;
     private static final int LOADING_TYPE = 2;
     private static final int CATEGORY_TYPE = 3;
+    private static final int DETAIL_TYPE = 4;
 
     private List<PicObject> mPicObjects;
     private OnPicObjectListener mOnPicObjectListener;
@@ -52,6 +53,11 @@ public class PicObjAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .inflate(R.layout.layout_category_list_item, parent, false);
                 return new CategoryViewHolder(view, mOnPicObjectListener);
             }
+//            case DETAIL_TYPE: {
+//                view = LayoutInflater.from(parent.getContext())
+//                        .inflate(R.layout.detail_list_item, parent, false);
+//                return new DetailViewHolder(view);
+//            }
             default: {
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.pic_obj_list_item, parent, false);
@@ -161,4 +167,5 @@ public class PicObjAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
         return null;
     }
+
 }
