@@ -9,7 +9,7 @@ public class Constants {
     public  static final String API_KEY ="9900098-8e28a903a63da19e7d8c5ab7a";
     public static final String NUMBER_PER_PAGE = "20";
 
-    public static final int NETWORK_TIMEOUT = 5000;
+    public static final int NETWORK_TIMEOUT = 3000;
 
     public static final String [] DEFAULT_SEARCH_CATEGORIES = {
       "Lady", "Kitten", "Horse", "Race Car", "Australian Shepherd", "Ferrari", "Rose", "Apple", "Cherry"

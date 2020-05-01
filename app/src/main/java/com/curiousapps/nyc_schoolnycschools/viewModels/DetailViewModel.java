@@ -12,13 +12,19 @@ public class DetailViewModel extends ViewModel {
 
     private PicObjectRepository mDetailRepository;
     private String mDetailId;
+    private boolean mDidRetrievePicObj;
 
     public DetailViewModel() {
         mDetailRepository = PicObjectRepository.getInstance();
+        mDidRetrievePicObj = false;
     }
 
     public LiveData<List<PicObject>> getPicDetail(){
         return mDetailRepository.getPicDetail();
+    }
+
+    public LiveData<Boolean> isDetailRequestTimedOut() {
+        return mDetailRepository.isDetailRequestTimedOut();
     }
 
     public void searchPicDetailApi(String detailId){
@@ -28,5 +34,13 @@ public class DetailViewModel extends ViewModel {
 
     public String getDetailId() {
         return mDetailId;
+    }
+
+    public boolean isDidRetrievePicObj() {
+        return mDidRetrievePicObj;
+    }
+
+    public void setDidRetrievePicObj(boolean mDidRetrievePicObj) {
+        this.mDidRetrievePicObj = mDidRetrievePicObj;
     }
 }

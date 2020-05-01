@@ -25,11 +25,13 @@ import static com.curiousapps.nyc_schoolnycschools.util.Constants.NETWORK_TIMEOU
 public class PicObjectApiClient {
 
     private static final String TAG = "PicObjectApiClient";
+
     private MutableLiveData<List<PicObject>> mPicObject;
     private static PicObjectApiClient instance;
     private RetrievePicObjectsRunnable mRetrievePicObjectsRunnable;
     private MutableLiveData<List<PicObject>> mPicDetail;
     private RetrievePicDetailRunnable mRetrievePicDetailRunnable;
+    private MutableLiveData<Boolean> mPicRequestTimeout = new MutableLiveData<>();
 
 
     public static PicObjectApiClient getInstance() {
@@ -49,6 +51,10 @@ public class PicObjectApiClient {
     }
     public LiveData<List<PicObject>> getPicDetail() {
         return mPicDetail;
+    }
+
+    public LiveData<Boolean> isDetailRequestTimedOut() {
+        return mPicRequestTimeout;
     }
 
     public void searchPicObjectsApi(String query, String perPage, int pageNumber) {
@@ -79,6 +85,7 @@ public class PicObjectApiClient {
             @Override
             public void run() {
                 //Let user know that network timed out
+                mPicRequestTimeout.postValue(true);
                 handler.cancel(true);
             }
         }, NETWORK_TIMEOUT, TimeUnit.MILLISECONDS);

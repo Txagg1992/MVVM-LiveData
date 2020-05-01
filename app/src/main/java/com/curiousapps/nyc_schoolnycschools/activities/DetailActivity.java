@@ -70,7 +70,17 @@ public class DetailActivity extends BaseActivity {
                     if (picObjects.get(position).getId().equals(mDetailViewModel.getDetailId())){
                         Testing.printDetailObject(picObjects, "Changed----------");
                         setDetailProperties(picObjects);
+                        mDetailViewModel.setDidRetrievePicObj(true);
                     }
+                }
+            }
+        });
+
+        mDetailViewModel.isDetailRequestTimedOut().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean && !mDetailViewModel.isDidRetrievePicObj()){
+                    Log.d(TAG, "OnChangeTimeOut");
                 }
             }
         });

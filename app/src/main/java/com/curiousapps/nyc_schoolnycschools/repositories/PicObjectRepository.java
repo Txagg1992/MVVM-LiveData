@@ -34,6 +34,10 @@ public class PicObjectRepository {
     public LiveData<List<PicObject>> getPicDetail(){
         return mPicObjectApiClient.getPicDetail();
     }
+
+    public LiveData<Boolean> isDetailRequestTimedOut() {
+        return mPicObjectApiClient.isDetailRequestTimedOut();
+    }
     public void searchPicObjectsApi(String query, String perPage, int pageNumber){
         if (pageNumber == 0){
             pageNumber = 1;
