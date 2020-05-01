@@ -80,6 +80,7 @@ public class PicObjectApiClient {
         mRetrievePicDetailRunnable = new RetrievePicDetailRunnable(detailId);
 
         final Future handler = AppExecutors.getInstance().networkIo().submit(mRetrievePicDetailRunnable);
+        mPicRequestTimeout.setValue(false);
         AppExecutors.getInstance().networkIo().schedule(new Runnable() {
 
             @Override

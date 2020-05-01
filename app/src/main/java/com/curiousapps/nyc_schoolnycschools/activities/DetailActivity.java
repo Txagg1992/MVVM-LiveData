@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -30,7 +31,8 @@ public class DetailActivity extends BaseActivity {
     private TextView mPicObjectUser;
     private TextView mPicObjectLikes;
     private TextView mDetailTagContainer;
-    private ConstraintLayout mConstraintLayout;
+    private LinearLayout mContainer;
+    private ScrollView mConstraintLayout;
 
     private DetailViewModel mDetailViewModel;
 
@@ -39,10 +41,12 @@ public class DetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        mConstraintLayout = findViewById(R.id.parent);
         mPicObjectImage = findViewById(R.id.pic_detail_image);
         mPicObjectUser = findViewById(R.id.pic_detail_user);
         mPicObjectLikes = findViewById(R.id.pic_detail_likes);
         mDetailTagContainer = findViewById(R.id.detail_tags_container);
+        mContainer = findViewById(R.id.error_container);
 
         mDetailViewModel = new ViewModelProvider(this).get(DetailViewModel.class);
 
@@ -81,9 +85,35 @@ public class DetailActivity extends BaseActivity {
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean && !mDetailViewModel.isDidRetrievePicObj()){
                     Log.d(TAG, "OnChangeTimeOut");
+                    displayErrorScreen("Error retrieving data, check network connection.");
                 }
             }
         });
+    }
+
+    private void displayErrorScreen(String errorMessage){
+        mPicObjectUser.setText("Error retrieving this picture...");
+        mPicObjectLikes.setText("");
+        mDetailTagContainer.setText("");
+        TextView textView = new TextView(this);
+        if (!errorMessage.equals("")){
+            textView.setText(errorMessage);
+        }else {
+            textView.setText("Error");
+        }
+        textView.setTextSize(15);
+        textView.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        mContainer.addView(textView);
+        RequestOptions requestOptions = new RequestOptions()
+                .placeholder(R.drawable.ic_launcher_foreground);
+        Glide.with(this)
+                .setDefaultRequestOptions(requestOptions)
+                .load(R.drawable.ic_launcher_foreground)
+                .into(mPicObjectImage);
+        showParent();
+        showProgressBar(false);
     }
 
     private void setDetailProperties(List<PicObject> picObject){
